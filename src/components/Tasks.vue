@@ -3,8 +3,10 @@
 <!-- loop through the tasks -->
 <!-- v-for creates a list or loop through and ouput something -->
 <template>
-    <div :key="task.id" v-for="task in tasks">
+    <div>
+        <div :key="task.id" v-for="task in tasks">
         <Task :task="task" />
+    </div>
     </div>
 </template>
 
