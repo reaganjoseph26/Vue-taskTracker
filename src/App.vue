@@ -1,9 +1,12 @@
 <!-- html output -->
 <template>
   <div class="container">
-    <Header title="Task Tracker"></Header>
+    <Header @toggle-addTask="toggleAddTask" title="Task Tracker" :showAddTask= 'showAddTask'/>
+    <div v-show="showAddTask">
+      <AddTask @add-task="addTask" />
+    </div>
     <!-- passing in dynamic array so if changes we want it to get sent down to tasks data -->
-    <Tasks :tasks="tasks" />
+    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
   </div>
 </template>
 
@@ -11,15 +14,37 @@
 <script>
 import Header from './components/Header'
 import Tasks from './components/Tasks'
+import AddTask from './components/AddTask'
 export default {
   name: 'App',
   components: {
     Header,
     Tasks,
+    AddTask,
   },
   data() {
     return {
-      tasks: []
+      tasks: [],
+      showAddTask: false
+    }
+  },
+  methods: {
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask
+    },
+    addTask(task) {
+      this.tasks = [...this.tasks, task]
+    },
+    deleteTask(id) {
+      if(confirm('Are you sure?')) {
+         //return everything back except the task with the id being passed through
+      this.tasks = this.tasks.filter((task) => task.id !==id)
+      }
+    },
+    toggleReminder(id) {
+      //map through enitre array and return an array of updated task
+      //for each task if task.id is equal to the task being passed in return an array of object where the initial task properties and then change the reminder to the opposite of the current task reminder else do nothing
+      this.tasks = this.tasks.map((task) => task.id === id ? {...task, reminder: !task.reminder } : task)
     }
   },
   created() {
